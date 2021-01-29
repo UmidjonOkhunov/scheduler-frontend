@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { ViewState, EditingState, ChangeSet } from '@devexpress/dx-react-scheduler';
 import {
-  Scheduler, DayView, Appointments, MonthView, Toolbar,
+  Scheduler,Appointments, MonthView, Toolbar,
   DateNavigator, ViewSwitcher, TodayButton, Resources, AppointmentTooltip,DragDropProvider, WeekView, EditRecurrenceMenu, ConfirmationDialog, AppointmentForm
 } from '@devexpress/dx-react-scheduler-material-ui';
-import { withStyles, Theme, createStyles, Fab, makeStyles } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { withStyles, Theme, createStyles} from '@material-ui/core';
 import { indigo, blue, teal } from '@material-ui/core/colors';
 import Paper from '@material-ui/core/Paper';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -130,19 +129,7 @@ const AppointmentContent = withStyles(styles, { name: 'AppointmentContent' })(({
   );
 });
 
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    addButton: {
-      position: 'absolute',
-      bottom: theme.spacing(1) * 3,
-      right: theme.spacing(1) * 4,
-    },
-  })
-);
-
  const Reservation = () => {
-   const classes = useStyles();
   const [data, setData] = React.useState<ReservationsAttributes[]>([]);
   const [currentDate, setCurrentDate] = React.useState(defaultCurrentDate);
   const [editingAppointment, setEditingAppointment] = React.useState();
@@ -170,13 +157,23 @@ const useStyles = makeStyles((theme: Theme) =>
   const commitChanges = (props:ChangeSet) =>{
     const {added, changed, deleted} = props
       if (added) {
-        resService.create(added as ReservationsAttributes).then(res =>(setData(data.concat(res))));
+        const {allDay,...newAp} = added; 
+        resService.create(newAp as ReservationsAttributes).then(res =>{
+          setData(data.concat(res))
+        });
       }
       if (changed) {
-        setData(data.map(appointment => (
-          changed[appointment.id||1] ? { ...appointment, ...changed[appointment.id||1] } : appointment)));
+        setData(data.map(appointment => {
+          if (appointment.id && changed[appointment.id]){
+            const changedApp = { ...appointment, ...changed[appointment.id] }
+            resService.update(appointment.id,changedApp)
+            return changedApp
+          }
+          return appointment
+        }));
       }
-      if (props.deleted !== undefined) {
+      if (deleted !== undefined) {
+        resService.delete(Number(deleted))
         setData(data.filter(appointment => appointment.id !== deleted));
       }
   }
@@ -214,7 +211,6 @@ const useStyles = makeStyles((theme: Theme) =>
       <WeekView
         startDayHour={9}
         endDayHour={19}
-        // timeTableCellComponent={TimeTableCell}
       />
       <EditRecurrenceMenu />
       {/* <ConfirmationDialog /> */}
