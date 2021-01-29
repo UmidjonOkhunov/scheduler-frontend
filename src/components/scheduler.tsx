@@ -155,12 +155,15 @@ const useStyles = makeStyles((theme: Theme) =>
   },[])
 
   const onAddedAppointmentChange = (addedAppointment:any)=> {
+    // console.log("addedAppointment", addedAppointment)
     setAddedAppointment(addedAppointment)
   }
   const onEditingAppointmentChange = (editingAppointment:any) =>{
+    // console.log("editingAppointment", editingAppointment)
     setEditingAppointment(editingAppointment);
   }
   const changeAppointmentChanges = (appointmentChanges:any) =>{
+    // console.log("appointmentChanges", appointmentChanges)
     setAppointmentChanges(appointmentChanges)
   }
 
@@ -177,6 +180,11 @@ const useStyles = makeStyles((theme: Theme) =>
         setData(data.filter(appointment => appointment.id !== deleted));
       }
   }
+
+  const booleanEditorComponent  = () => {
+    return null
+    };
+
 
    return (
   <Paper>
@@ -206,12 +214,14 @@ const useStyles = makeStyles((theme: Theme) =>
       <WeekView
         startDayHour={9}
         endDayHour={19}
+        // timeTableCellComponent={TimeTableCell}
       />
       <EditRecurrenceMenu />
-      <ConfirmationDialog />
+      {/* <ConfirmationDialog /> */}
       <Appointments
         appointmentComponent={Appointment}
         appointmentContentComponent={AppointmentContent}
+        
       />
       <Resources
         data={resources}
@@ -226,22 +236,10 @@ const useStyles = makeStyles((theme: Theme) =>
       <DateNavigator />
       <ViewSwitcher />
       <TodayButton />
-      <AppointmentForm />
+      <AppointmentForm 
+      booleanEditorComponent={booleanEditorComponent}
+      />
     </Scheduler>
-    <Fab
-          color="secondary"
-          className={classes.addButton}
-          // onClick={() => {
-          //   this.setState({ editingFormVisible: true });
-          //   this.onEditingAppointmentChange(undefined);
-          //   this.onAddedAppointmentChange({
-          //     startDate: new Date(currentDate).setHours(startDayHour),
-          //     endDate: new Date(currentDate).setHours(startDayHour + 1),
-          //   });
-          // }}
-        >
-          <AddIcon />
-        </Fab>
   </Paper>
 )};
 
