@@ -2,13 +2,13 @@ import * as React from 'react';
 import { ViewState, EditingState, ChangeSet } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,Appointments, MonthView, Toolbar,
-  DateNavigator, ViewSwitcher, TodayButton, Resources, AppointmentTooltip,DragDropProvider, WeekView, EditRecurrenceMenu, ConfirmationDialog, AppointmentForm
+  DateNavigator, ViewSwitcher, TodayButton, Resources, AppointmentTooltip, WeekView, EditRecurrenceMenu, AppointmentForm
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { withStyles, Theme, createStyles} from '@material-ui/core';
 import { indigo, blue, teal } from '@material-ui/core/colors';
 import Paper from '@material-ui/core/Paper';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { WithStyles, useTheme } from '@material-ui/styles';
+import { WithStyles } from '@material-ui/styles';
 import classNames from 'clsx';
 import {resources} from "../db/resources";
 import resService,{ReservationsAttributes} from '../services/reservations'
@@ -109,17 +109,11 @@ const AppointmentContent = withStyles(styles, { name: 'AppointmentContent' })(({
   classes, data, ...restProps
   // #FOLD_BLOCK
 }: AppointmentContentProps) =>  {
-  let priority = 'low';
-  if (data.priority === 2) priority = 'medium';
-  if (data.priority === 3) priority = 'high';
   return (
     <Appointments.AppointmentContent {...restProps} data={data}>
       <div className={classes.container}>
         <div className={classes.text}>
           {data.title}
-        </div>
-        <div className={classNames(classes.text, classes.content)}>
-          {`Priority: ${priority}`}
         </div>
         <div className={classNames(classes.text, classes.content)}>
           {`Location: ${data.location}`}
@@ -129,9 +123,8 @@ const AppointmentContent = withStyles(styles, { name: 'AppointmentContent' })(({
   );
 });
 
- const Reservation = () => {
+ const Reservation:React.FC = () => {
   const [data, setData] = React.useState<ReservationsAttributes[]>([]);
-  const [currentDate, setCurrentDate] = React.useState(defaultCurrentDate);
   const [editingAppointment, setEditingAppointment] = React.useState();
   const [addedAppointment, setAddedAppointment] = React.useState({});
   const [appointmentChanges, setAppointmentChanges] = React.useState({})  
@@ -142,15 +135,12 @@ const AppointmentContent = withStyles(styles, { name: 'AppointmentContent' })(({
   },[])
 
   const onAddedAppointmentChange = (addedAppointment:any)=> {
-    // console.log("addedAppointment", addedAppointment)
     setAddedAppointment(addedAppointment)
   }
   const onEditingAppointmentChange = (editingAppointment:any) =>{
-    // console.log("editingAppointment", editingAppointment)
     setEditingAppointment(editingAppointment);
   }
   const changeAppointmentChanges = (appointmentChanges:any) =>{
-    // console.log("appointmentChanges", appointmentChanges)
     setAppointmentChanges(appointmentChanges)
   }
 
@@ -189,7 +179,7 @@ const AppointmentContent = withStyles(styles, { name: 'AppointmentContent' })(({
       data={data}
     >
       <ViewState
-        defaultCurrentDate={currentDate}
+        defaultCurrentDate={defaultCurrentDate}
       />
       <EditingState
             onCommitChanges={commitChanges}

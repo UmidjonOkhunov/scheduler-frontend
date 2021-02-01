@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import Scheduler from  "./components/scheduler"
 
-function App() {
+const App:React.FC=()=> {
   return (
     <div className="App">
       <Scheduler/>
